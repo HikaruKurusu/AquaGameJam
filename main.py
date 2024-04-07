@@ -37,7 +37,62 @@ answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that 
            )
 #list of recorded correct answers
 correct_answers = (1,0,1)
+def winner1():
+    winner1 = get_font(100).render("Player1 Wins", True, (0, 0, 0))
+    winner1_RECT = winner1.get_rect(center=(550, 300))
+    screen.blit(winner1, winner1_RECT)
+def winner2():
+    winner2 = get_font(100).render("Player2 Wins", True, (0, 0, 0))
+    winner2_RECT = winner2.get_rect(center=(550, 300))
+    screen.blit(winner2, winner2_RECT)
+    
+def Instructions():
+    global running  # Declare 'running' as a global variable
+    
+    pygame.display.set_caption("Menu")
+    clock = pygame.time.Clock()
+    running = True  # Initialize 'running' as True within the function scope
+    bg = pygame.image.load("bg.jpg")
+    while running:
+        screen.blit(bg, (0, 0))
+        BACK_MOUSE_POS = pygame.mouse.get_pos()
+        BACK_TEXT = get_font(100).render("INSTRUCTIONS", True, (0, 0, 0))
+        BACK_RECT = BACK_TEXT.get_rect(center=(640, 100))
+        BACK_BUTTON = Button(pos=(640, 500), textInput="BACK", font=get_font(20), baseColor="Grey", hoveringColor="Black")
+        screen.blit(BACK_TEXT, BACK_RECT)
 
+        INSTRUCTIONS = get_font(15).render("Welcome to the high-stakes race between two rival companies in a quest to access and clean a contaminated aquifer!", True, (0, 0, 0))
+        INSTRUCTIONS2 = get_font(15).render("In this thrilling competition, only one company can emerge victorious and claim the lucrative reward.", True, (0, 0, 0))
+        INSTRUCTIONS3 = get_font(15).render("But here's the catch: to dig down and reach the aquifer, you must correctly answer a series of questions.", True, (0, 0, 0))
+        INSTRUCTIONS4 = get_font(15).render("Player 1, you hold the keys 1, 2, and 3, while Player 2, you possess the power of 8, 9, and 0 on your keyboard to answer", True, (0, 0, 0))
+        INSTRUCTIONS5 = get_font(15).render("Get ready for a battle of wits and strategy as you vie to be the first to cleanse the aquifer and secure the prize.", True, (0, 0, 0))
+        INSTRUCTIONS6 = get_font(15).render("Good luck, and may the best company prevail!", True, (0, 0, 0))
+
+        INSTRUCTIONS_RECT = BACK_TEXT.get_rect(center=(550, 300))
+        INSTRUCTIONS_RECT2 = BACK_TEXT.get_rect(center=(550, 330))
+        INSTRUCTIONS_RECT3 = BACK_TEXT.get_rect(center=(550, 360))
+        INSTRUCTIONS_RECT4 = BACK_TEXT.get_rect(center=(550, 390))
+        INSTRUCTIONS_RECT5 = BACK_TEXT.get_rect(center=(550, 420))
+        INSTRUCTIONS_RECT6 = BACK_TEXT.get_rect(center=(550, 450))
+        screen.blit(INSTRUCTIONS, INSTRUCTIONS_RECT)
+        screen.blit(INSTRUCTIONS2, INSTRUCTIONS_RECT2)
+        screen.blit(INSTRUCTIONS3, INSTRUCTIONS_RECT3)
+        screen.blit(INSTRUCTIONS4, INSTRUCTIONS_RECT4)
+        screen.blit(INSTRUCTIONS5, INSTRUCTIONS_RECT5)
+        screen.blit(INSTRUCTIONS6, INSTRUCTIONS_RECT6)
+        for button in [BACK_BUTTON]:
+            button.changeColor(BACK_MOUSE_POS)
+            button.update(screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                running = False  # Update the 'running' variable to terminate the loop
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if BACK_BUTTON.checkForInput(BACK_MOUSE_POS):
+                    mainMenu()
+        pygame.display.update()
+        clock.tick(60)
 
 def get_font(size):
     return pygame.font.Font(font_path, size)
@@ -242,7 +297,7 @@ def mainMenu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     play()
                 if INSTRUCTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    mainMenu()
+                    Instructions()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -250,5 +305,5 @@ def mainMenu():
         clock.tick(60)
 
 #music will play and loop until window is closed
-play_music()
+# play_music()
 mainMenu()
