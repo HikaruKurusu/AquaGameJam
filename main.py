@@ -16,6 +16,8 @@ BLACK = (0, 0, 0)
 #this code below is forimporting music
 bgMusic = "backgroundMusic.mp3"
 pygame.mixer.init()
+cheering_sound = pygame.mixer.Sound('cheering.mp3')
+victory_sound = pygame.mixer.Sound('victory.mp3')
 #list of questions
 questions = ("Which of the following best describes an aquifer?",
              "What is the primary source of water for aquifers?",
@@ -87,24 +89,38 @@ def play_music():
     #since its set to -1 it will play indefinetly
     pygame.mixer.music.play(-1)
 
+def play_victory():
+    cheering_sound.set_volume(0.1)
+    victory_sound.set_volume(0.4)
+    pygame.mixer.Channel(0).play(cheering_sound)
+    pygame.mixer.Channel(1).play(pygame.mixer.Sound('victory.mp3'))
+
 
 
 def play():
-    player1_height = 100
-    player2_height = 100
+    player1_depth = 0
+    player2_depth = 0
     #pygame.display.set_caption("Play")
     bg = pygame.image.load("Background.png")
     bg = pygame.transform.scale(bg,(720, 720))
+
+    p1 = pygame.image.load("Player1.png")
+    p1 = pygame.transform.scale(p1,(72, 72))
+    p2 = pygame.image.load("Player2.png")
+    p2 = pygame.transform.scale(p2,(72, 72))
     #random question picked
     a = random.randint(0,2)
     b = random.randint(0,2)
     
+
     
 
     #this is like fixed update
     while running:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         screen.blit(bg, (280,0))
+        screen.blit(p1, (400,player1_depth+105))
+        screen.blit(p2, (800,player2_depth+105))
         #background or question text
         pygame.draw.rect(screen, (255, 255, 255), (5, 5, 270, 720))
         #background or question text
@@ -114,11 +130,11 @@ def play():
         #display question for player 2
         display_question(b,20,1010)
         #display p1 height from aquifer
-        p1height = get_font(50).render(str(player1_height) + "ft", True, "black")
-        screen.blit(p1height,(75,600))
+        p1depth = get_font(50).render(str(player1_depth) + "ft", True, "black")
+        screen.blit(p1depth,(75,600))
         #display p2 height from aquifer
-        p2height = get_font(50).render(str(player2_height) + "ft", True, "black")
-        screen.blit(p2height,(1075,600))
+        p2depth = get_font(50).render(str(player2_depth) + "ft", True, "black")
+        screen.blit(p2depth,(1075,600))
         #uncomment out for play text at the top
         #PLAY_TEXT = get_font(100).render("PLAY", True, "Black")
         #PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
@@ -132,40 +148,45 @@ def play():
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         #display back
         PLAY_BACK.update(screen)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                    mainMenu()
-            #player 1 controls: 1,2,3
-            #player 2 controls: 8,9,0
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    if correct_answers[a] == 0:
-                        a = random.randint(0,2)
-                        player1_height -= 5
-                elif event.key == pygame.K_2:
-                    if correct_answers[a] == 1:
-                        a = random.randint(0,2)
-                        player1_height -= 5
-                elif event.key == pygame.K_3:
-                    if correct_answers[a] == 2:
-                        a = random.randint(0,2)
-                if event.key == pygame.K_8:
-                    if correct_answers[b] == 0:
-                        b = random.randint(0,2)
-                        player2_height -= 5
-                elif event.key == pygame.K_9:
-                    if correct_answers[b] == 1:
-                        b = random.randint(0,2)
-                        player2_height -= 5
-                elif event.key == pygame.K_0:
-                    if correct_answers[b] == 2:
-                        b = random.randint(0,2)
-                        player2_height -= 5
-                
+        if player1_depth <= 345 and player2_depth <= 345:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        mainMenu()
+                #player 1 controls: 1,2,3
+                #player 2 controls: 8,9,0
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_1:
+                        if correct_answers[a] == 0:
+                            a = random.randint(0,2)
+                            player1_depth += 5
+                    elif event.key == pygame.K_2:
+                        if correct_answers[a] == 1:
+                            a = random.randint(0,2)
+                            player1_depth += 5
+                    elif event.key == pygame.K_3:
+                        if correct_answers[a] == 2:
+                            a = random.randint(0,2)
+                            player1_depth += 5
+                    if event.key == pygame.K_8:
+                        if correct_answers[b] == 0:
+                            b = random.randint(0,2)
+                            player2_depth += 5
+                    elif event.key == pygame.K_9:
+                        if correct_answers[b] == 1:
+                            b = random.randint(0,2)
+                            player2_depth += 5
+                    elif event.key == pygame.K_0:
+                        if correct_answers[b] == 2:
+                            b = random.randint(0,2)
+                            player2_depth += 5
+        else:
+            play_victory()
+            pygame.time.delay(7500)  
+            mainMenu()    
 
         pygame.display.update()
         clock.tick(60)
