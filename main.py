@@ -38,12 +38,12 @@ answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that 
 #list of recorded correct answers
 correct_answers = (1,0,1)
 def winner1():
-    winner1 = get_font(100).render("Player1 Wins", True, (0, 0, 0))
-    winner1_RECT = winner1.get_rect(center=(550, 300))
+    winner1 = get_font(100).render("Player1 Wins", True, WHITE)
+    winner1_RECT = winner1.get_rect(center=(640, 300))
     screen.blit(winner1, winner1_RECT)
 def winner2():
-    winner2 = get_font(100).render("Player2 Wins", True, (0, 0, 0))
-    winner2_RECT = winner2.get_rect(center=(550, 300))
+    winner2 = get_font(100).render("Player2 Wins", True, WHITE)
+    winner2_RECT = winner2.get_rect(center=(640, 300))
     screen.blit(winner2, winner2_RECT)
     
 def Instructions():
@@ -237,6 +237,29 @@ def play():
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         #display back
         PLAY_BACK.update(screen)
+        if player1_depth > 345:
+            winner1()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        mainMenu()
+
+        elif player2_depth > 345:
+            winner2()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        mainMenu()
+            
+            
+             
+            #mainMenu()  
         if player1_depth <= 345 and player2_depth <= 345:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -260,10 +283,9 @@ def play():
                         b, player2_depth = update_player_depth(b, player2_depth, 1)
                     elif event.key == pygame.K_0:
                         b, player2_depth = update_player_depth(b, player2_depth, 2)
-        else:
-            play_victory()
-            pygame.time.delay(7500)  
-            mainMenu()    
+        
+
+     
 
         pygame.display.update()
         clock.tick(60)
@@ -305,5 +327,5 @@ def mainMenu():
         clock.tick(60)
 
 #music will play and loop until window is closed
-# play_music()
+#play_music()
 mainMenu()
