@@ -13,6 +13,7 @@ font_path = "Pixel.ttf"
 #colors for background of Back button
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BROWN = (68, 45, 10)
 #this code below is forimporting music
 bgMusic = "backgroundMusic.mp3"
 pygame.mixer.init()
@@ -21,14 +22,21 @@ victory_sound = pygame.mixer.Sound('victory.mp3')
 #list of questions
 questions = ("Which of the following best describes an aquifer?",
              "What is the primary source of water for aquifers?",
-             "What is the term for the level below which the ground is saturated with water in an aquifer?")
+             "What is the term for the level below which the ground is saturated with water in an aquifer?",
+             "Which of the following pollutants is commonly associated with aquifer contamination?"
+            #uncomment out for more questions
+            #  ,"What method is commonly used to remediate aquifers contaminated with petroleum products?",
+            #  "Which of the following is an example of in situ remediation for aquifer decontamination?"
+            #  "What is the purpose of installing a permeable reactive barrier in an aquifer?",
+            #  "Which of the following factors can affect the success of aquifer decontamination efforts?"
+            )
 #list of options
-answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that contains and transmits groundwater","c: A layer of sedimentary rock formed by volcanic activity"),
+answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that contains and transmits groundwater","c) A layer of sedimentary rock formed by volcanic activity"),
            ("a) Rainfall and surface water", "b) Glacier meltwater", "c) Underground rivers"),
            ("a) Aquitard", "b) Water table", "c) Perched water table")
            )
 #list of recorded correct answers
-correct_answers = (1,1,2)
+correct_answers = (1,0,1)
 
 
 def get_font(size):
@@ -95,6 +103,9 @@ def play_victory():
     pygame.mixer.Channel(0).play(cheering_sound)
     pygame.mixer.Channel(1).play(pygame.mixer.Sound('victory.mp3'))
 
+def display_hole(hole_width, player_depth,player_x):
+    pygame.draw.rect(screen, BLACK, (player_x,180, hole_width, player_depth))
+
 
 
 def play():
@@ -111,16 +122,35 @@ def play():
     #random question picked
     a = random.randint(0,2)
     b = random.randint(0,2)
-    
+    hole_width = 67
+    player1_x = 400
+    player2_x = 800
 
+    def update_player_depth(question_number, player_depth,correct_answer):
+        if correct_answers[question_number] == correct_answer:
+            question_number = random.randint(0,2)
+            player_depth += 5
+        elif correct_answers[question_number] != correct_answer and player_depth > 0 and player_depth < 200:
+            question_number = random.randint(0,2)
+            player_depth -= 2
+        elif correct_answers[question_number] != correct_answer and player_depth > 200:
+            question_number = random.randint(0,2)
+            player_depth -= 10
+        return question_number, player_depth
+        
     
 
     #this is like fixed update
     while running:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
+        #background display
         screen.blit(bg, (280,0))
-        screen.blit(p1, (400,player1_depth+105))
-        screen.blit(p2, (800,player2_depth+105))
+        #display hole
+        display_hole(hole_width,player1_depth,player1_x)
+        display_hole(hole_width,player2_depth,player2_x)
+        #player display
+        screen.blit(p1, (player1_x,player1_depth+105))
+        screen.blit(p2, (player2_x,player2_depth+105))
         #background or question text
         pygame.draw.rect(screen, (255, 255, 255), (5, 5, 270, 720))
         #background or question text
@@ -160,29 +190,17 @@ def play():
                 #player 2 controls: 8,9,0
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
-                        if correct_answers[a] == 0:
-                            a = random.randint(0,2)
-                            player1_depth += 5
+                        a, player1_depth = update_player_depth(a, player1_depth, 0)
                     elif event.key == pygame.K_2:
-                        if correct_answers[a] == 1:
-                            a = random.randint(0,2)
-                            player1_depth += 5
+                        a, player1_depth = update_player_depth(a, player1_depth, 1)
                     elif event.key == pygame.K_3:
-                        if correct_answers[a] == 2:
-                            a = random.randint(0,2)
-                            player1_depth += 5
+                        a, player1_depth = update_player_depth(a, player1_depth, 2)
                     if event.key == pygame.K_8:
-                        if correct_answers[b] == 0:
-                            b = random.randint(0,2)
-                            player2_depth += 5
+                        b, player2_depth = update_player_depth(b, player2_depth, 0)
                     elif event.key == pygame.K_9:
-                        if correct_answers[b] == 1:
-                            b = random.randint(0,2)
-                            player2_depth += 5
+                        b, player2_depth = update_player_depth(b, player2_depth, 1)
                     elif event.key == pygame.K_0:
-                        if correct_answers[b] == 2:
-                            b = random.randint(0,2)
-                            player2_depth += 5
+                        b, player2_depth = update_player_depth(b, player2_depth, 2)
         else:
             play_victory()
             pygame.time.delay(7500)  
