@@ -6,10 +6,12 @@ screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Menu")
 clock = pygame.time.Clock()
 running = True
+#imported pixel font
 font_path = "Pixel.ttf"
+#colors for background of Back button
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-# lines 11 - 13 for music
+#this code below is forimporting music
 bgMusic = "backgroundMusic.mp3"
 pygame.mixer.init()
 
@@ -17,8 +19,10 @@ pygame.mixer.init()
 def get_font(size):
     return pygame.font.Font(font_path, size)
 
+#function to play music
 def play_music():
     pygame.mixer.music.load(bgMusic)
+    #since its set to -1 it will play indefinetly
     pygame.mixer.music.play(-1)
 
 def play():
@@ -28,13 +32,16 @@ def play():
     while running:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         screen.blit(bg, (280,0))
+        #uncomment out for play text at the top
         #PLAY_TEXT = get_font(100).render("PLAY", True, "Black")
         #PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         #screen.blit(PLAY_TEXT, PLAY_RECT)
+        #back button
         PLAY_BACK = Button(pos=(640, 650), textInput="BACK", font=get_font(25), baseColor="Black", hoveringColor="red")
-        #background_rect = pygame.rect(PLAY_BACK.rect.x-5, PLAY_BACK.rect.y, PLAY_BACK.rect.width, PLAY_BACK.rect.height)
+        #background rect of back button
         pygame.draw.rect(screen,WHITE,(PLAY_BACK.rect.x-9, PLAY_BACK.rect.y+1, PLAY_BACK.rect.width+15, PLAY_BACK.rect.height))
         pygame.draw.rect(screen,BLACK,(PLAY_BACK.rect.x-9, PLAY_BACK.rect.y+1, PLAY_BACK.rect.width+15, PLAY_BACK.rect.height),5)
+        #change color after hover
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(screen)
         for event in pygame.event.get():
@@ -83,6 +90,6 @@ def mainMenu():
         pygame.display.update()
         clock.tick(60)
 
-
+#music will play and loop until window is closed
 play_music()
 mainMenu()
