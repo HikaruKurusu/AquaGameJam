@@ -327,5 +327,5 @@ def mainMenu():
         clock.tick(60)
 
 #music will play and loop until window is closed
-#play_music()
+play_music()
 mainMenu()
