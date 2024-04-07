@@ -87,23 +87,38 @@ def play_music():
     #since its set to -1 it will play indefinetly
     pygame.mixer.music.play(-1)
 
+
+
 def play():
-    
+    player1_height = 100
+    player2_height = 100
     #pygame.display.set_caption("Play")
     bg = pygame.image.load("Background.png")
     bg = pygame.transform.scale(bg,(720, 720))
-    #display_question(2)
-    #display question for player 1
+    #random question picked
     a = random.randint(0,2)
-    display_question(a,20,10)
-    #display question for player 2
     b = random.randint(0,2)
-    display_question(b,20,1010)
+    
+    
 
     #this is like fixed update
     while running:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         screen.blit(bg, (280,0))
+        #background or question text
+        pygame.draw.rect(screen, (255, 255, 255), (5, 5, 270, 720))
+        #background or question text
+        pygame.draw.rect(screen, (255, 255, 255), (1005, 5, 270, 720))
+        #display question for player 1
+        display_question(a,20,10)
+        #display question for player 2
+        display_question(b,20,1010)
+        #display p1 height from aquifer
+        p1height = get_font(50).render(str(player1_height) + "ft", True, "black")
+        screen.blit(p1height,(75,600))
+        #display p2 height from aquifer
+        p2height = get_font(50).render(str(player2_height) + "ft", True, "black")
+        screen.blit(p2height,(1075,600))
         #uncomment out for play text at the top
         #PLAY_TEXT = get_font(100).render("PLAY", True, "Black")
         #PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
@@ -124,21 +139,33 @@ def play():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     mainMenu()
-            #if u press 1 2 or 3,
-            # if event.type == pygame.KEYDOWN:
-            #     if event.type == pygame.K_1:
-            #         if correct_answers[a] == 1:
-            #             a = random.randint(0,2)
-            #             display_question(a,20,10)
-            #     if event.type == pygame.K_2:
-            #         if correct_answers[a] == 2:
-            #             a = random.randint(0,2)
-            #             display_question(a,20,10)
-            #     if event.type == pygame.K_3:
-            #         if correct_answers[a] == 3:
-            #             a = random.randint(0,2)
-            #             display_question(a,20,10)
-
+            #player 1 controls: 1,2,3
+            #player 2 controls: 8,9,0
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    if correct_answers[a] == 0:
+                        a = random.randint(0,2)
+                        player1_height -= 5
+                elif event.key == pygame.K_2:
+                    if correct_answers[a] == 1:
+                        a = random.randint(0,2)
+                        player1_height -= 5
+                elif event.key == pygame.K_3:
+                    if correct_answers[a] == 2:
+                        a = random.randint(0,2)
+                if event.key == pygame.K_8:
+                    if correct_answers[b] == 0:
+                        b = random.randint(0,2)
+                        player2_height -= 5
+                elif event.key == pygame.K_9:
+                    if correct_answers[b] == 1:
+                        b = random.randint(0,2)
+                        player2_height -= 5
+                elif event.key == pygame.K_0:
+                    if correct_answers[b] == 2:
+                        b = random.randint(0,2)
+                        player2_height -= 5
+                
 
         pygame.display.update()
         clock.tick(60)
