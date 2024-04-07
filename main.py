@@ -13,7 +13,7 @@ font_path = "Pixel.ttf"
 #colors for background of Back button
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BROWN = (68, 45, 10)
+#BROWN = (68, 45, 10)
 #this code below is forimporting music
 bgMusic = "backgroundMusic.mp3"
 pygame.mixer.init()
@@ -23,20 +23,34 @@ victory_sound = pygame.mixer.Sound('victory.mp3')
 questions = ("Which of the following best describes an aquifer?",
              "What is the primary source of water for aquifers?",
              "What is the term for the level below which the ground is saturated with water in an aquifer?",
-             "Which of the following pollutants is commonly associated with aquifer contamination?"
-            #uncomment out for more questions
-            #  ,"What method is commonly used to remediate aquifers contaminated with petroleum products?",
-            #  "Which of the following is an example of in situ remediation for aquifer decontamination?"
-            #  "What is the purpose of installing a permeable reactive barrier in an aquifer?",
-            #  "Which of the following factors can affect the success of aquifer decontamination efforts?"
+             "Which of the following pollutants is commonly associated with aquifer contamination?",
+             "What is a common method used for decontaminating aquifers polluted with organic contaminants?",
+             "Which of the following describes the process of bioremediation in aquifer decontamination?",
+             "What role does phytoremediation play in decontaminating aquifers?",
+             "What is the primary purpose of chemical oxidation in aquifer decontamination?",
+             "Which technique involves the use of electrical currents to remove contaminants from aquifers?",
+             "How does physical filtration contribute to aquifer decontamination?",
+             "What is one advantage of using bioremediation for aquifer decontamination?",
+             "Which method involves the use of activated carbon to adsorb contaminants from aquifers?",
+             "What is a potential challenge of using electrochemical treatment for aquifer decontamination?",
+             "Which method relies on the principle of osmosis to remove contaminants from aquifers?"
             )
 #list of options
 answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that contains and transmits groundwater","c) A layer of sedimentary rock formed by volcanic activity"),
            ("a) Rainfall and surface water", "b) Glacier meltwater", "c) Underground rivers"),
-           ("a) Aquitard", "b) Water table", "c) Perched water table")
-           )
+           ("a) Aquitard", "b) Water table", "c) Perched water table"),
+           ("a) Bioremediation", "b) Chemical oxidation", "c) Physical filtration)"),
+           ("a) Using chemicals to neutralize contaminants", "b) Injecting microorganisms to break down contaminants", "c) Filtering contaminants through activated carbon"),
+           ("a) Introducing aquatic plants to absorb contaminants", "b) Applying heat to vaporize contaminants", "c) Using ultrasound waves to break down contaminants"),
+           ("a) Removing dissolved contaminants", "b) Stimulating microbial growth", "c) Breaking down contaminants into harmless byproducts"),
+           ("a) Electrochemical treatment", "b) Reverse osmosis", "c) Ion exchange"),
+           ("a) By using membranes to separate contaminants", "b) By injecting chemicals to neutralize contaminants", "c) By promoting the growth of specific microorganisms"),
+           ("a) Rapid treatment process", "b) Minimal environmental impact", "c) Low cost of implementation"),
+           ("a) Adsorption", "b) Bioremediation", "c) Chemical oxidation"),
+           ("a) High cost", "b) Limited effectiveness", "c) Risk of secondary pollution"),
+           ("a) Reverse osmosis", "b) Ion exchange", "c) Electrochemical treatment"))
 #list of recorded correct answers
-correct_answers = (1,0,1)
+correct_answers = (1,0,1,0, 1, 0, 2, 0, 0, 1, 0, 2, 0)
 def winner1():
     winner1 = get_font(100).render("Player1 Wins", True, WHITE)
     winner1_RECT = winner1.get_rect(center=(640, 300))
@@ -179,8 +193,8 @@ def play():
     p2 = pygame.image.load("Player2.png")
     p2 = pygame.transform.scale(p2,(72, 72))
     #random question picked
-    a = random.randint(0,2)
-    b = random.randint(0,2)
+    a = random.randint(0,12)
+    b = random.randint(0,12)
     hole_width = 67
     player1_x = 400
     player2_x = 800
@@ -188,14 +202,14 @@ def play():
     #this updates players depth based on question and inputed answer
     def update_player_depth(question_number, player_depth,correct_answer):
         if correct_answers[question_number] == correct_answer:
-            question_number = random.randint(0,2)
-            player_depth += 7
+            question_number = random.randint(0,12)
+            player_depth += 15
         elif correct_answers[question_number] != correct_answer and player_depth > 0 and player_depth < 200:
-            question_number = random.randint(0,2)
-            player_depth -= 4
+            question_number = random.randint(0,12)
+            player_depth -= 8
         elif correct_answers[question_number] != correct_answer and player_depth > 200:
-            question_number = random.randint(0,2)
-            player_depth -= 15
+            question_number = random.randint(0,12)
+            player_depth -= 17
         return question_number, player_depth
         
     
