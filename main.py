@@ -97,11 +97,13 @@ def play_music():
     #since its set to -1 it will play indefinetly
     pygame.mixer.music.play(-1)
 
+#plays victory sound 
 def play_victory():
-    cheering_sound.set_volume(0.1)
+    cheering_sound.set_volume(0.15)
     victory_sound.set_volume(0.4)
     pygame.mixer.Channel(0).play(cheering_sound)
     pygame.mixer.Channel(1).play(pygame.mixer.Sound('victory.mp3'))
+
 
 def display_hole(hole_width, player_depth,player_x):
     pygame.draw.rect(screen, BLACK, (player_x,180, hole_width, player_depth))
@@ -109,12 +111,13 @@ def display_hole(hole_width, player_depth,player_x):
 
 
 def play():
+    #set player depth to 0 at start of game
     player1_depth = 0
     player2_depth = 0
     #pygame.display.set_caption("Play")
     bg = pygame.image.load("Background.png")
     bg = pygame.transform.scale(bg,(720, 720))
-
+    #load player sprites
     p1 = pygame.image.load("Player1.png")
     p1 = pygame.transform.scale(p1,(72, 72))
     p2 = pygame.image.load("Player2.png")
@@ -126,16 +129,17 @@ def play():
     player1_x = 400
     player2_x = 800
 
+    #this updates players depth based on question and inputed answer
     def update_player_depth(question_number, player_depth,correct_answer):
         if correct_answers[question_number] == correct_answer:
             question_number = random.randint(0,2)
-            player_depth += 5
+            player_depth += 7
         elif correct_answers[question_number] != correct_answer and player_depth > 0 and player_depth < 200:
             question_number = random.randint(0,2)
-            player_depth -= 2
+            player_depth -= 4
         elif correct_answers[question_number] != correct_answer and player_depth > 200:
             question_number = random.randint(0,2)
-            player_depth -= 10
+            player_depth -= 15
         return question_number, player_depth
         
     
