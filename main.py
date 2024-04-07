@@ -52,7 +52,8 @@ def Instructions():
     pygame.display.set_caption("Menu")
     clock = pygame.time.Clock()
     running = True  # Initialize 'running' as True within the function scope
-    bg = pygame.image.load("bg.jpg")
+    bg = pygame.image.load("mainmenu_background.png")
+    bg = pygame.transform.scale(bg,(1280, 720))
     while running:
         screen.blit(bg, (0, 0))
         BACK_MOUSE_POS = pygame.mouse.get_pos()
@@ -296,7 +297,9 @@ def mainMenu():
     pygame.display.set_caption("Menu")
     clock = pygame.time.Clock()
     running = True  # Initialize 'running' as True within the function scope
-    bg = pygame.image.load("bg.jpg")
+    
+    bg = pygame.image.load("mainmenu_background.png")
+    bg = pygame.transform.scale(bg,(1280, 720))
     while running:
         screen.blit(bg, (0, 0))
         # screen.fill(bg)
