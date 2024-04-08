@@ -13,12 +13,19 @@ font_path = "Pixel.ttf"
 #colors for background of Back button
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+#tell wheter victory was been played
+victory_sound_played = False
+
 #BROWN = (68, 45, 10)
 #this code below is forimporting music
-bgMusic = "backgroundMusic.mp3"
+bgMusic = "sounds/backgroundMusic.mp3"
 pygame.mixer.init()
-cheering_sound = pygame.mixer.Sound('cheering.mp3')
-victory_sound = pygame.mixer.Sound('victory.mp3')
+cheering_sound = pygame.mixer.Sound('sounds/cheering.mp3')
+victory_sound = pygame.mixer.Sound('sounds/victory.mp3')
+correct_sound = pygame.mixer.Sound('sounds/correct.mp3')
+wrong_sound = pygame.mixer.Sound('sounds/wrong.mp3')
+click_sound = pygame.mixer.Sound('sounds/click.wav')
+back_click_sound = pygame.mixer.Sound('sounds/back_click.mp3')
 #list of questions
 questions = ("Which of the following best describes an aquifer?",
              "What is the primary source of water for aquifers?",
@@ -38,7 +45,7 @@ questions = ("Which of the following best describes an aquifer?",
 answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that contains and transmits groundwater","c) A layer of sedimentary rock formed by volcanic activity"),
            ("a) Rainfall and surface water", "b) Glacier meltwater", "c) Underground rivers"),
            ("a) Aquitard", "b) Water table", "c) Perched water table"),
-           ("a) Bioremediation", "b) Chemical oxidation", "c) Physical filtration)"),
+           ("a) Bioremediation", "b) Chemical oxidation", "c) Physical filtration"),
            ("a) Using chemicals to neutralize contaminants", "b) Injecting microorganisms to break down contaminants", "c) Filtering contaminants through activated carbon"),
            ("a) Introducing aquatic plants to absorb contaminants", "b) Applying heat to vaporize contaminants", "c) Using ultrasound waves to break down contaminants"),
            ("a) Removing dissolved contaminants", "b) Stimulating microbial growth", "c) Breaking down contaminants into harmless byproducts"),
@@ -51,13 +58,17 @@ answers = (("a) A layer of impermeable rock","b) A layer of permeable rock that 
 #list of recorded correct answers
 correct_answers = (1,0,1,0, 1, 0, 2, 0, 0, 1, 0, 2, 0)
 def winner1():
+    global victory_sound_played
     winner1 = get_font(100).render("Player1 Wins", True, WHITE)
     winner1_RECT = winner1.get_rect(center=(640, 300))
     screen.blit(winner1, winner1_RECT)
+    play_victory()
 def winner2():
+    global victory_sound_played
     winner2 = get_font(100).render("Player2 Wins", True, WHITE)
     winner2_RECT = winner2.get_rect(center=(640, 300))
     screen.blit(winner2, winner2_RECT)
+    play_victory()
     
 def Instructions():
     global running  # Declare 'running' as a global variable
@@ -65,14 +76,14 @@ def Instructions():
     pygame.display.set_caption("Menu")
     clock = pygame.time.Clock()
     running = True  # Initialize 'running' as True within the function scope
-    bg = pygame.image.load("mainmenu_background.png")
+    bg = pygame.image.load("img/mainmenu_background.png")
     bg = pygame.transform.scale(bg,(1280, 720))
     while running:
         screen.blit(bg, (0, 0))
         BACK_MOUSE_POS = pygame.mouse.get_pos()
         BACK_TEXT = get_font(100).render("INSTRUCTIONS", True, (0, 0, 0))
         BACK_RECT = BACK_TEXT.get_rect(center=(640, 100))
-        BACK_BUTTON = Button(pos=(640, 500), textInput="BACK", font=get_font(20), baseColor="Grey", hoveringColor="Black")
+        BACK_BUTTON = Button(pos=(640, 500), textInput="BACK", font=get_font(20), baseColor="White", hoveringColor="Red")
         screen.blit(BACK_TEXT, BACK_RECT)
 
         INSTRUCTIONS = get_font(15).render("Welcome to the high-stakes race between two rival companies in a quest to access and clean a contaminated aquifer!", True, (0, 0, 0))
@@ -104,6 +115,7 @@ def Instructions():
                 running = False  # Update the 'running' variable to terminate the loop
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if BACK_BUTTON.checkForInput(BACK_MOUSE_POS):
+                    play_back_click()
                     mainMenu()
         pygame.display.update()
         clock.tick(60)
@@ -163,16 +175,35 @@ def display_question(question_index,font_size,x):
 #function to play music
 def play_music():
     pygame.mixer.music.load(bgMusic)
-    #since its set to -1 it will play indefinetly
+    pygame.mixer.music.set_volume(1)  # Adjust volume as needed
     pygame.mixer.music.play(-1)
+    
+
+
+def play_click():
+    click_sound.set_volume(0.2)
+    pygame.mixer.Channel(3).play(click_sound)
+
+def play_back_click():
+    back_click_sound.set_volume(0.2)
+    pygame.mixer.Channel(3).play(back_click_sound)
 
 #plays victory sound 
 def play_victory():
+    global victory_sound_played
     cheering_sound.set_volume(0.15)
     victory_sound.set_volume(0.4)
-    pygame.mixer.Channel(0).play(cheering_sound)
-    pygame.mixer.Channel(1).play(pygame.mixer.Sound('victory.mp3'))
+    if not victory_sound_played:
+        pygame.mixer.Channel(0).play(cheering_sound)
+        pygame.mixer.Channel(1).play(pygame.mixer.Sound('sounds/victory.mp3'))
+        victory_sound_played = True
+def correct():
+    correct_sound.set_volume(0.4)
+    pygame.mixer.Channel(0).play(correct_sound)
 
+def wrong():
+    wrong_sound.set_volume(0.4)
+    pygame.mixer.Channel(1).play(wrong_sound)
 
 def display_hole(hole_width, player_depth,player_x):
     pygame.draw.rect(screen, BLACK, (player_x,180, hole_width, player_depth))
@@ -184,12 +215,12 @@ def play():
     player1_depth = 0
     player2_depth = 0
     #pygame.display.set_caption("Play")
-    bg = pygame.image.load("Background.png")
+    bg = pygame.image.load("img/Background.png")
     bg = pygame.transform.scale(bg,(720, 720))
     #load player sprites
-    p1 = pygame.image.load("Player1.png")
+    p1 = pygame.image.load("img/Player1.png")
     p1 = pygame.transform.scale(p1,(72, 72))
-    p2 = pygame.image.load("Player2.png")
+    p2 = pygame.image.load("img/Player2.png")
     p2 = pygame.transform.scale(p2,(72, 72))
     #random question picked
     a = random.randint(0,12)
@@ -201,17 +232,22 @@ def play():
     #this updates players depth based on question and inputed answer
     def update_player_depth(question_number, player_depth,correct_answer):
         if correct_answers[question_number] == correct_answer:
+            correct()
             question_number = random.randint(0,12)
-            player_depth += 15
+            player_depth += 25
         elif correct_answers[question_number] != correct_answer and player_depth > 0 and player_depth < 200:
+            wrong()
             question_number = random.randint(0,12)
-            player_depth -= 8
+            player_depth -= 5
         elif correct_answers[question_number] != correct_answer and player_depth > 200:
+            wrong()
             question_number = random.randint(0,12)
-            player_depth -= 17
+            player_depth -= 15
         return question_number, player_depth
         
-    
+    def reset_game():
+        global victory_sound_played
+        victory_sound_played = False
 
     #this is like fixed update
     while running:
@@ -259,7 +295,10 @@ def play():
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        cheering_sound.set_volume(0)
+                        play_back_click()
                         mainMenu()
+        
 
         elif player2_depth > 345:
             winner2()
@@ -269,6 +308,8 @@ def play():
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        cheering_sound.set_volume(0)
+                        play_back_click
                         mainMenu()
             
             
@@ -281,6 +322,7 @@ def play():
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        play_back_click()
                         mainMenu()
                 #player 1 controls: 1,2,3
                 #player 2 controls: 8,9,0
@@ -311,7 +353,7 @@ def mainMenu():
     clock = pygame.time.Clock()
     running = True  # Initialize 'running' as True within the function scope
     
-    bg = pygame.image.load("mainmenu_background.png")
+    bg = pygame.image.load("img/mainmenu_background.png")
     bg = pygame.transform.scale(bg,(1280, 720))
     while running:
         screen.blit(bg, (0, 0))
@@ -321,7 +363,7 @@ def mainMenu():
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
         PLAY_BUTTON = Button(pos=(640, 250), textInput="PLAY", font=get_font(75), baseColor="Grey", hoveringColor="Black")
         INSTRUCTIONS_BUTTON = Button(pos=(640, 350), textInput="INSTRUCTIONS", font=get_font(75), baseColor="Grey", hoveringColor="Black")
-        QUIT_BUTTON = Button(pos=(640, 450), textInput="QUIT", font=get_font(75), baseColor="Grey", hoveringColor="Black")
+        QUIT_BUTTON = Button(pos=(640, 450), textInput="QUIT", font=get_font(75), baseColor="Grey", hoveringColor="Red")
         screen.blit(MENU_TEXT, MENU_RECT)
         for button in [PLAY_BUTTON, INSTRUCTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
@@ -333,10 +375,13 @@ def mainMenu():
                 running = False  # Update the 'running' variable to terminate the loop
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play_click()
                     play()
                 if INSTRUCTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play_click()
                     Instructions()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play_back_click()
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
