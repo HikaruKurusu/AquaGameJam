@@ -317,7 +317,7 @@ def mainMenu():
         screen.blit(bg, (0, 0))
         # screen.fill(bg)
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = get_font(100).render("MAIN MENU", True, (0, 0, 0))
+        MENU_TEXT = get_font(100).render("Aquifer Mine", True, (0, 0, 0))
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
         PLAY_BUTTON = Button(pos=(640, 250), textInput="PLAY", font=get_font(75), baseColor="Grey", hoveringColor="Black")
         INSTRUCTIONS_BUTTON = Button(pos=(640, 350), textInput="INSTRUCTIONS", font=get_font(75), baseColor="Grey", hoveringColor="Black")
