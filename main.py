@@ -23,7 +23,6 @@ victory_sound = pygame.mixer.Sound('victory.mp3')
 questions = ("Which of the following best describes an aquifer?",
              "What is the primary source of water for aquifers?",
              "What is the term for the level below which the ground is saturated with water in an aquifer?",
-             "Which of the following pollutants is commonly associated with aquifer contamination?",
              "What is a common method used for decontaminating aquifers polluted with organic contaminants?",
              "Which of the following describes the process of bioremediation in aquifer decontamination?",
              "What role does phytoremediation play in decontaminating aquifers?",
