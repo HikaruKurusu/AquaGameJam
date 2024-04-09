@@ -20,6 +20,7 @@ victory_sound_played = False
 #BROWN = (68, 45, 10)
 #this code below is forimporting music
 bgMusic = "sounds/backgroundMusic.mp3"
+pygame.mixer.music.load(bgMusic)
 pygame.mixer.init()
 cheering_sound = pygame.mixer.Sound('sounds/cheering.mp3')
 victory_sound = pygame.mixer.Sound('sounds/victory.mp3')
@@ -64,6 +65,7 @@ def winner1():
     winner1_RECT = winner1.get_rect(center=(640, 300))
     screen.blit(winner1, winner1_RECT)
     play_victory()
+
 def winner2():
     global victory_sound_played
     winner2 = get_font(100).render("Player2 Wins", True, WHITE)
@@ -175,7 +177,6 @@ def display_question(question_index,font_size,x):
         
 #function to play music
 def play_music():
-    pygame.mixer.music.load(bgMusic)
     pygame.mixer.music.set_volume(1)  # Adjust volume as needed
     pygame.mixer.music.play(-1)
     
@@ -183,11 +184,11 @@ def play_music():
 
 def play_click():
     click_sound.set_volume(0.2)
-    pygame.mixer.Channel(3).play(click_sound)
+    pygame.mixer.Channel(0).play(click_sound)
 
 def play_back_click():
     back_click_sound.set_volume(0.2)
-    pygame.mixer.Channel(3).play(back_click_sound)
+    pygame.mixer.Channel(0).play(back_click_sound)
 
 #plays victory sound 
 def play_victory():
