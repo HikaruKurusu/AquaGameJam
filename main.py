@@ -16,6 +16,7 @@ BLACK = (0, 0, 0)
 #tell wheter victory was been played
 victory_sound_played = False
 
+
 #BROWN = (68, 45, 10)
 #this code below is forimporting music
 bgMusic = "sounds/backgroundMusic.mp3"
@@ -211,6 +212,9 @@ def display_hole(hole_width, player_depth,player_x):
 
 
 def play():
+    #to get variable use global
+    global victory_sound_played
+    victory_sound_played = False
     #set player depth to 0 at start of game
     player1_depth = 0
     player2_depth = 0
@@ -309,7 +313,7 @@ def play():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         cheering_sound.set_volume(0)
-                        play_back_click
+                        play_back_click()
                         mainMenu()
             
             
